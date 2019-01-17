@@ -13,6 +13,11 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.io.File
+import android.R.attr.button
+//import com.sun.org.apache.xerces.internal.util.DOMUtil.getParent
+import android.view.ViewGroup
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,10 +34,33 @@ class MainActivity : AppCompatActivity() {
 
         fileDir = applicationContext.filesDir.toString()
         fullPath = fileDir + "/" + fileName
-
+        //SerializableManager.removeSerializable(applicationContext, fileName)  //DELETE on first load (just for testing purposes)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        var file = File(fullPath)
+        if (file.exists())
+        {
+            logd("File Exists")
+
+            //Remove the main vehicle button.
+            /*val layout = buttonAddFirstVehicle.getParent() as ViewGroup
+            layout?.removeView(buttonAddFirstVehicle)
+            */
+
+            var vhList = SerializableManager.readSerializable<ArrayList<vehicle>>(applicationContext, fileName)
+            vhList.forEach {
+                logd(it.vName + "Got here!")
+            }
+
+        }
+        else
+        {
+            logd("File Doesn't exist.")
+        }
+
+
         buttonAddFirstVehicle.setOnClickListener {view ->
             logd("Add First Vehicle button was clicked!")
             //Creating a new intent allows us to basically open another Activity. In this case, we are going to open the Add Vehicle activity.
@@ -41,21 +69,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonAddVehicle.setOnClickListener{view ->
-            Snackbar.make(findViewById(android.R.id.content), fullPath, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+
         }
 
-        var file = File(fullPath)
-        if (file.exists())
-        {
-            logd("File Exists")
-            Snackbar.make(findViewById(android.R.id.content), "File Exists!", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        buttonDelete.setOnClickListener{view ->
+            SerializableManager.removeSerializable(applicationContext, fileName)
         }
-        else
-        {
-            logd("File Doesn't exist.")
-        }
+
 
 
 
