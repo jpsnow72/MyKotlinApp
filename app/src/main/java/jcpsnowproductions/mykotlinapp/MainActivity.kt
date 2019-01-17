@@ -12,19 +12,49 @@ import android.view.MenuItem
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
-   ;
+
+
+    private var fileDir = ""
+
+    private var fileName = "data.dat"
+
+    private var fullPath = ""
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        fileDir = applicationContext.filesDir.toString()
+        fullPath = fileDir + "/" + fileName
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        buttonAddFirstVehicle.setOnClickListener {
+        buttonAddFirstVehicle.setOnClickListener {view ->
             logd("Add First Vehicle button was clicked!")
             //Creating a new intent allows us to basically open another Activity. In this case, we are going to open the Add Vehicle activity.
             val intent = Intent(this, ActivityAddVehicle::class.java)
             startActivity(intent)
+        }
+
+        buttonAddVehicle.setOnClickListener{view ->
+            Snackbar.make(findViewById(android.R.id.content), fullPath, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+        }
+
+        var file = File(fullPath)
+        if (file.exists())
+        {
+            logd("File Exists")
+            Snackbar.make(findViewById(android.R.id.content), "File Exists!", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+        }
+        else
+        {
+            logd("File Doesn't exist.")
         }
 
 
