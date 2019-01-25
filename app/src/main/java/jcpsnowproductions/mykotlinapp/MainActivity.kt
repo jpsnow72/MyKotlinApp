@@ -14,6 +14,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.io.File
 import android.R.attr.button
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.View
 //import com.sun.org.apache.xerces.internal.util.DOMUtil.getParent
 import android.view.ViewGroup
 
@@ -40,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         var file = File(fullPath)
+
         if (file.exists())
         {
             logd("File Exists")
@@ -50,9 +54,20 @@ class MainActivity : AppCompatActivity() {
             */
 
             var vhList = SerializableManager.readSerializable<ArrayList<vehicle>>(applicationContext, fileName)
+
+            //Initialize array lists that will be used to show all vehicles currently in the garage.
+            var imgList: ArrayList<String> = ArrayList()
+            var vehList: ArrayList<vehicle> = ArrayList()
+            //var idList: ArrayList<Int> = ArrayList()
             vhList.forEach {
-                logd(it.vName + "Got here!")
+                logd("${it.vName} ${it.vID}")
+                imgList.add("https://www.iconsdb.com/icons/preview/black/car-xxl.png") //This will be replaced by an actaul image of the user's vehicle (if one exists).
+                vehList.add(it)
+                //idList.add(it.vID)
+
             }
+            initRecyclerView(imgList, vehList)
+            buttonAddFirstVehicle.visibility = View.INVISIBLE
 
         }
         else
@@ -69,11 +84,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonAddVehicle.setOnClickListener{view ->
-
+            logd("Additional Vehicle Added")
+            val intent = Intent(this, ActivityAddVehicle::class.java)
+            startActivity(intent)
         }
 
         buttonDelete.setOnClickListener{view ->
             SerializableManager.removeSerializable(applicationContext, fileName)
+            //Refresh the current activity
+            finish()
+            startActivity(getIntent())
         }
 
 
@@ -86,8 +106,30 @@ class MainActivity : AppCompatActivity() {
 
         }*/
     }
+    companion object {
+        private val INTENT_ADDED_VEHICLE_ID = "vehicle_id"
+
+        fun newIntent(context: Context, myVehicle: vehicle): Intent
+        {
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra(INTENT_ADDED_VEHICLE_ID, myVehicle.vID)
+            return intent
+        }
+
+    }
+
+    fun initRecyclerView(imgList: ArrayList<String>, vehList: ArrayList<vehicle>) {
+
+        logd("Initiating RecylcerView")
+        var rView: RecyclerView = findViewById(R.id.recyclerViewer)
+        var rAdapter: RecyclerViewAdapter = RecyclerViewAdapter(vehList, imgList, this)
+        recyclerViewer.adapter = rAdapter
+        recyclerViewer.layoutManager = LinearLayoutManager(this)
+
+    }
+
     fun Activity.logd(message: String) {
-        if (BuildConfig.DEBUG) Log.d(this::class.java.simpleName, message)
+        if (BuildConfig.DEBUG) Log.d(this::class.java.simpleName, "Logd: $message")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

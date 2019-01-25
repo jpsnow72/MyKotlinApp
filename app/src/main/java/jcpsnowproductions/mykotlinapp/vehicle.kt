@@ -2,7 +2,7 @@ package jcpsnowproductions.mykotlinapp
 
 import java.io.Serializable
 
-class vehicle(var vName: String, var vVin: String, var vYear: Int, var vMake: String, var vModel: String, var vStyle: String, var vColor: String, var vEngine: String, val vNotes: String): Serializable {
+class vehicle(var vID: Int, var vName: String, var vVin: String, var vYear: Int, var vMake: String, var vModel: String, var vStyle: String, var vColor: String, var vEngine: String, val vNotes: String): Serializable {
     /*private var name: String = vName
     private var vin: String = ""
     private var year: Int = 0
