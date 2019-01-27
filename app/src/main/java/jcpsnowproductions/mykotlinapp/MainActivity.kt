@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        setTitle("My Garage")
         fileDir = applicationContext.filesDir.toString()
         fullPath = fileDir + "/" + fileName
         //SerializableManager.removeSerializable(applicationContext, fileName)  //DELETE on first load (just for testing purposes)
