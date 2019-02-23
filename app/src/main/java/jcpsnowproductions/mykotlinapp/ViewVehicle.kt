@@ -4,11 +4,13 @@ import android.app.Activity
 import android.content.Intent.getIntent
 import android.os.AsyncTask
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 
 import kotlinx.android.synthetic.main.activity_view_vehicle.*
 import kotlinx.android.synthetic.main.content_view_vehicle.*
@@ -23,6 +25,24 @@ import java.net.URL
 class ViewVehicle : AppCompatActivity() {
     val CONNECTON_TIMEOUT_MILLISECONDS = 60000
 
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navigation_recalls -> {
+                val toast = Toast.makeText(getApplicationContext(), "Recalls!", Toast.LENGTH_SHORT) as Toast
+                toast.show()
+            }
+            R.id.navigation_maintenance -> {
+                val toast = Toast.makeText(getApplicationContext(), "Maintenance!", Toast.LENGTH_SHORT) as Toast
+                toast.show()
+            }
+            R.id.navigation_edit -> {
+                val toast = Toast.makeText(getApplicationContext(), "Edit!", Toast.LENGTH_SHORT) as Toast
+                toast.show()
+            }
+        }
+        false
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_vehicle)
@@ -38,10 +58,18 @@ Color: ${v.vColor}
 Engine/Transmission: ${v.vEngine}""")
         textNotes.setText(v.vNotes)
 
-        buttonEdit.setOnClickListener {view ->
+        /*buttonEdit.setOnClickListener {view ->
 
-        }
-        getRecallInfo(v)
+        }*/
+
+        //Re-enable getRecallInfo or put it on a different screen.
+        //getRecallInfo(v)
+
+        val bottomNav: BottomNavigationView = findViewById(R.id.bottomNavigation)
+
+        bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+
     }
 
     fun getRecallInfo(v: vehicle)
@@ -51,7 +79,7 @@ Engine/Transmission: ${v.vEngine}""")
         {
             var urlString = "https://one.nhtsa.gov/webapi/api/Recalls/vehicle/modelyear/${v.vYear}/make/${v.vMake}/model/${v.vModel.substringBefore(' ')}?format=json"
             logd(urlString)
-            GetVehicleAsyncTask().execute(urlString)
+            //ActivityViewVehicle.GetVehicleAsyncTask().execute(urlString)
 
         }
     }

@@ -3,4 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_add_vehicle">ActivityAddVehicle</string>
     <string name="title_activity_view_vehicle">View Vehicle</string>
+    <string name="title_recalls">Recalls</string>
+    <string name="title_maintenance">Maintenance</string>
+    <string name="title_edit">Edit</string>
 </resources>
